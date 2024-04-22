@@ -1,2 +1,4 @@
 ﻿  main.cpp
+C:\Users\kunal\OneDrive\Documents\Win Socket\Server\Server\main.cpp(39,37): warning C4305: 'argument': truncation from 'int' to 'u_short'
+C:\Users\kunal\OneDrive\Documents\Win Socket\Server\Server\main.cpp(39,37): warning C4309: 'argument': truncation of constant value
   Server.vcxproj -> C:\Users\kunal\OneDrive\Documents\Win Socket\Server\x64\Debug\Server.exe

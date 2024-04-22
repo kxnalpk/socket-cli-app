@@ -1,9 +1,6 @@
 #include <iostream>
 #include <tchar.h>
 #include <WinSock2.h>
-
-// For converting network routing to binary
-// TO-dos: Do network routing to binary manually without a lib
 #include <WS2tcpip.h>
 
 using namespace std;
@@ -23,13 +20,14 @@ int main() {
         return 1;
     }
 
-    cout << "hello world" << endl;
-
     SOCKET CreateSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (CreateSocket == INVALID_SOCKET) {
         cout << "Socket Creation - FAILED" << endl;
         return 1;
+    }
+    else {
+        cout << "Socket Creation - SUCCESS" << endl;
     }
 
     sockaddr_in RoutingAddress;
@@ -45,5 +43,36 @@ int main() {
         return 1;
     }
 
+    if(bind(CreateSocket, reinterpret_cast<sockaddr*>(&RoutingAddress), sizeof(RoutingAddress)) == SOCKET_ERROR) {
+        closesocket(CreateSocket);
+        WSACleanup();
+        return 1;
+    }
+
+    if (listen(CreateSocket, SOMAXCONN) == SOCKET_ERROR) {
+        cout << "Socket Listening - FAILED" << endl;
+        closesocket(CreateSocket);
+        WSACleanup();
+        return 1;
+    }
+    else {
+        cout << "Server Listening - SUCCESS [69690]" << endl;
+    }
+
+    SOCKET ClientSocket = accept(CreateSocket, nullptr, nullptr);
+    if (ClientSocket == INVALID_SOCKET) {
+        cout << "Client Socket - INVALID" << endl;
+    }
+
+    char buffer[4096];
+    int NtGot = recv(ClientSocket, buffer, sizeof(buffer), 0);
+
+    string message(buffer, NtGot);
+    cout << "Client Side:" << message << endl;
+
+    closesocket(ClientSocket);
+    closesocket(CreateSocket);
+
+    WSACleanup();
     return 0;
 }
